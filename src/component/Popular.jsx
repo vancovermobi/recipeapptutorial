@@ -1,4 +1,7 @@
 import { useEffect, useState } from "react"
+import { Splide, SplideSlide } from '@splidejs/react-splide';
+import '@splidejs/splide/dist/css/splide.min.css';
+import Card from "./Card/Card"
 
 function Popular() {
   const [popular, setPopular] = useState([])
@@ -19,13 +22,48 @@ useEffect(() =>{
 }, [])
 
 const getPopular = async () =>{
+    const check = localStorage.getItem('popular')
+
+    if(check){
+      setPopular(JSON.parse(check))
+    }else{
+      try {
+        
+      } catch (error) {
+        
+      }finally{
+
+      }
+    }
    
     //const data = await api.json()
     //console.log("data", data);
 }
 
   return (
-    <div>Popular</div>
+    <div className="WrapperPopular" >
+      <h3>Popular Picks</h3>
+      <Splide
+        options={{
+          perPage: 4,
+          arrows: false,
+          pagination: false,
+          drag: "free",
+          gap: ".5rem",
+          rewind : true,
+        }}
+      >
+        {
+          popular.map((recipe) => {
+            return(
+              <SplideSlide>
+                <Card recipe={recipe}/>
+              </SplideSlide>
+            )
+          })
+        }
+      </Splide>
+    </div>
   )
 }
 
