@@ -1,0 +1,3 @@
+npm install framer-motion react-icons react-router-dom styled-components @splidejs/react-splide
+
+npx json-server -p 3500 -w dataLocal/db.json
