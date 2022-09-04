@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { Splide, SplideSlide } from '@splidejs/react-splide';
 import '@splidejs/splide/dist/css/splide.min.css';
 import Card from "./Card/Card"
+import apiRequest from "../apiRequest/apiRequest";
 
 function Popular() {
   const [popular, setPopular] = useState([])
@@ -26,13 +27,26 @@ const getPopular = async () =>{
 
     if(check){
       setPopular(JSON.parse(check))
+      setIsLoading(false)
     }else{
       try {
-        
+        const resultOnline = await apiRequest(urlApiOnline)
+        if(resultOnline.dataResponse){
+          setPopular(resultOnline.dataResponse.recipes) 
+          localStorage.setItem('popular', JSON.stringify(resultOnline.dataResponse.recipes))         
+        }else{
+          const resultLocal = await apiRequest(urlLocal)
+          if(resultLocal.dataResponse){
+            setPopular(resultLocal.dataResponse)
+            localStorage.setItem('popular', JSON.stringify(resultLocal.dataResponse))
+            console.log("Data Local: ", resultLocal.dataResponse);
+          }
+        }
+        setFetchError(null)        
       } catch (error) {
-        
+        setFetchError(error.message)
       }finally{
-
+        setIsLoading(false)
       }
     }
    
@@ -43,26 +57,32 @@ const getPopular = async () =>{
   return (
     <div className="WrapperPopular" >
       <h3>Popular Picks</h3>
-      <Splide
-        options={{
-          perPage: 4,
-          arrows: false,
-          pagination: false,
-          drag: "free",
-          gap: ".5rem",
-          rewind : true,
-        }}
-      >
-        {
-          popular.map((recipe) => {
-            return(
-              <SplideSlide>
-                <Card recipe={recipe}/>
-              </SplideSlide>
-            )
-          })
-        }
-      </Splide>
+      {isLoading && <p>Loading items recipes...</p>}
+      {
+        fetchError && <p style={{ color: "red"}} >{`Error: ${fetchError}`}</p>
+      }
+      {!fetchError && !isLoading &&
+        <Splide
+          options={{
+            perPage: 4,
+            arrows: false,
+            pagination: false,
+            drag: "free",
+            gap: ".5rem",
+            rewind : true,
+          }}
+        >
+          {
+            popular.map((recipe) => {
+              return(
+                <SplideSlide>
+                  <Card recipe={recipe}/>
+                </SplideSlide>
+              )
+            })
+          }
+        </Splide>
+      }
     </div>
   )
 }
