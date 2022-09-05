@@ -2,8 +2,7 @@ import Pages from "./pages/Pages";
 
 function App() {
   return (
-    <div className="App">
-      <h1>Phạm Đình Liêm-Hello</h1>
+    <div className="App">      
       <Pages />
     </div>
   );

@@ -11,8 +11,8 @@ function Popular() {
 
   //Url API Spoonacular
 const urlOnline = "https://api.spoonacular.com/recipes/random"
-const apiKey = process.env.REACT_APP__FOOT_API_KEY
-const numberPages = 10
+const apiKey = process.env.REACT_APP__FOOD_API_KEY
+const numberPages = 20
 const urlApiOnline = `${urlOnline}?apiKey=${apiKey}&number=${numberPages}`
 
   // Url local db.json
@@ -32,6 +32,7 @@ const getPopular = async () =>{
       try {
         const resultOnline = await apiRequest(urlApiOnline)
         if(resultOnline.dataResponse){
+          //console.log("Spoonacular: ", resultOnline.dataResponse.recipes);
           setPopular(resultOnline.dataResponse.recipes) 
           localStorage.setItem('popular', JSON.stringify(resultOnline.dataResponse.recipes))         
         }else{
@@ -39,7 +40,7 @@ const getPopular = async () =>{
           if(resultLocal.dataResponse){
             setPopular(resultLocal.dataResponse)
             localStorage.setItem('popular', JSON.stringify(resultLocal.dataResponse))
-            console.log("Data Local: ", resultLocal.dataResponse);
+            //console.log("Data Local: ", resultLocal.dataResponse);
           }
         }
         setFetchError(null)        
@@ -48,10 +49,7 @@ const getPopular = async () =>{
       }finally{
         setIsLoading(false)
       }
-    }
-   
-    //const data = await api.json()
-    //console.log("data", data);
+    }   
 }
 
   return (
@@ -75,7 +73,7 @@ const getPopular = async () =>{
           {
             popular.map((recipe) => {
               return(
-                <SplideSlide>
+                <SplideSlide key={recipe.id}>
                   <Card recipe={recipe}/>
                 </SplideSlide>
               )
