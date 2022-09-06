@@ -3,3 +3,4 @@ npm install framer-motion react-icons react-router-dom styled-components @splide
 npx json-server -p 3500 -w dataLocal/db.json
 
 npm i sass --save-dev
+npm install react-icons --save
